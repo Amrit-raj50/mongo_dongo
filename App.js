@@ -1,7 +1,8 @@
 // src/app.js
 
-const express    = require('express');
-const userRoutes = require('./src/route/user.route');
+const express = require('express');
+const logger = require('./src/middleware/logger.middleware');
+const userRoutes = require('./src/routes/user.routes');
 
 const app = express();
 
@@ -9,8 +10,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/users', userRoutes);
+// App-level middleware
+app.use(logger);
+
+// Routes with router-level middleware
+app.use('/api/users', logger, userRoutes);
 
 // 404 — no route matched
 app.use((req, res) => {
